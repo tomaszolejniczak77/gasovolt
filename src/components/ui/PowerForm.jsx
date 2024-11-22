@@ -14,7 +14,7 @@ const PowerForm = () => {
 
   const addPowerUsage = async (usage) => {
     const response = await fetch(
-      "http://192.168.1.225:5000/usage/electricity",
+      "https://192.168.1.225:5000/usage/electricity",
       {
         method: "POST",
         headers: {

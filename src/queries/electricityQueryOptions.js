@@ -1,4 +1,4 @@
-const URL = "http://192.168.1.225:5000/usage/electricity";
+const URL = "https://192.168.1.225:5000/usage/electricity";
 
 export const electricityQueryOptions = {
   queryFn: async () => {

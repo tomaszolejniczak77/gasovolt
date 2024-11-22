@@ -12,7 +12,7 @@ const GasForm = () => {
   const queryClient = useQueryClient();
 
   const addGasUsage = async (usage) => {
-    const response = await fetch("http://192.168.1.225:5000/usage/gas", {
+    const response = await fetch("https://192.168.1.225:5000/usage/gas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
