@@ -1,0 +1,13 @@
+.nav {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav h1 {
+  margin-right: auto;
+  margin-left: 15px;
+  background: linear-gradient(90deg, #1e90ff, #6495ed, #ffa500);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
