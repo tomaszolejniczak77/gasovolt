@@ -3,6 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 
+// const URL = "http://192.168.1.225:8000/usage/gas";
+
+const URL_SERVER = "https://gasovoltserver-production.up.railway.app/usage/gas";
+
 const GasForm = () => {
   const [gasUsage, setGasUsage] = useState("");
   const [gasInputDate, setGasInputDate] = useState("");
@@ -12,7 +16,7 @@ const GasForm = () => {
   const queryClient = useQueryClient();
 
   const addGasUsage = async (usage) => {
-    const response = await fetch("https://192.168.1.225:5000/usage/gas", {
+    const response = await fetch(URL_SERVER, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

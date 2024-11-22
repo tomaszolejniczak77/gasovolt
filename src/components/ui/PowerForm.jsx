@@ -3,6 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 
+// const URL = "http://192.168.1.225:8000/usage/electricity";
+
+const URL_SERVER =
+  "https://gasovoltserver-production.up.railway.app/usage/electricity";
+
 const PowerForm = () => {
   const [powerUsageL1, setPowerUsageL1] = useState("");
   const [powerUsageL2, setPowerUsageL2] = useState("");
@@ -13,16 +18,13 @@ const PowerForm = () => {
   const queryClient = useQueryClient();
 
   const addPowerUsage = async (usage) => {
-    const response = await fetch(
-      "https://192.168.1.225:5000/usage/electricity",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(usage),
-      }
-    );
+    const response = await fetch(URL_SERVER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(usage),
+    });
 
     if (!response.ok) {
       throw new Error("Failed to add user");
