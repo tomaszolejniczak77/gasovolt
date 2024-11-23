@@ -45,7 +45,7 @@
 }
 
 .div1 form {
-  height: 200px;
+  height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,8 +53,8 @@
 }
 
 .div1 input {
-  width: 200px;
-  height: 40px;
+  width: 220px;
+  height: 45px;
   text-align: center;
   outline: none;
   border: none;
@@ -72,9 +72,15 @@
   color: transparent;
 }
 
+.closeBtn {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
 .div1 button {
   height: 40px;
-  width: 100px;
+  width: 120px;
   border: none;
   border-radius: 5px;
   background-color: #333;

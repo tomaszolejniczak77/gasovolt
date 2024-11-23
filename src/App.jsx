@@ -23,10 +23,16 @@ function App() {
         <div className="main">
           <div className="main1">
             <div className="div1">
-              {isGasFormOpen ? <GasForm /> : <GasChart />}
+              {isGasFormOpen ? (
+                <GasForm />
+              ) : isPowerFormOpen ? (
+                <PowerForm />
+              ) : (
+                <GasChart />
+              )}
             </div>
             <div className="div1">
-              {isPowerFormOpen ? <PowerForm /> : <PowerChart />}
+              <PowerChart />
             </div>
           </div>
 

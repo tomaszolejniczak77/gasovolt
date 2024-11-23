@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
+import { AiFillCloseSquare } from "react-icons/ai";
 
 // const URL = "http://192.168.1.225:8000/usage/gas";
 
@@ -9,7 +10,7 @@ const URL_SERVER = "https://gasovoltserver-production.up.railway.app/usage/gas";
 
 const GasForm = () => {
   const [gasUsage, setGasUsage] = useState("");
-  const [gasInputDate, setGasInputDate] = useState("rrrr.mm.dd");
+  const [gasInputDate, setGasInputDate] = useState("");
 
   const { setIsGasFormOpen } = useContext(NavContext);
 
@@ -52,6 +53,14 @@ const GasForm = () => {
   return (
     <>
       <h2>Wprowadź aktualne zużycie gazu</h2>
+      <div className="closeBtn">
+        <AiFillCloseSquare
+          onClick={() => setIsGasFormOpen(false)}
+          color="#1e90ff"
+          size={30}
+        />
+      </div>
+
       <form onSubmit={handleSumbit}>
         <input
           value={gasInputDate}
