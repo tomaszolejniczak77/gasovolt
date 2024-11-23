@@ -9,7 +9,7 @@ const URL_SERVER = "https://gasovoltserver-production.up.railway.app/usage/gas";
 
 const GasForm = () => {
   const [gasUsage, setGasUsage] = useState("");
-  const [gasInputDate, setGasInputDate] = useState("");
+  const [gasInputDate, setGasInputDate] = useState("rrrr.mm.dd");
 
   const { setIsGasFormOpen } = useContext(NavContext);
 
@@ -57,7 +57,6 @@ const GasForm = () => {
           value={gasInputDate}
           type="date"
           name="date"
-          id="date"
           required
           onChange={(e) => setGasInputDate(e.target.value)}
         />
