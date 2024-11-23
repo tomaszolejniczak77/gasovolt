@@ -57,6 +57,7 @@ const GasForm = () => {
           value={gasInputDate}
           type="date"
           name="date"
+          id="date"
           required
           onChange={(e) => setGasInputDate(e.target.value)}
         />
