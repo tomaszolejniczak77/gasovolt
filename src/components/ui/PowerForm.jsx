@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { AiFillCloseSquare } from "react-icons/ai";
+import DeleteLastPowerInput from "./DeleteLastPowerInput";
 
 // const URL = "http://192.168.1.225:8000/usage/electricity";
 
@@ -63,7 +64,7 @@ const PowerForm = () => {
         <AiFillCloseSquare
           onClick={() => setIsPowerFormOpen(false)}
           color="#FF9933"
-          size={30}
+          size={26}
         />
       </div>
       <form onSubmit={handleSumbit}>
@@ -92,6 +93,9 @@ const PowerForm = () => {
         />
         <button type="submit">Zapisz dane</button>
       </form>
+      <div className="deleteBtn">
+        <DeleteLastPowerInput />
+      </div>
     </>
   );
 };

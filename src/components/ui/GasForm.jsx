@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { AiFillCloseSquare } from "react-icons/ai";
-
+import DeleteLastGasInput from "./DeleteLastGasInput";
 // const URL = "http://192.168.1.225:8000/usage/gas";
 
 const URL_SERVER = "https://gasovoltserver-production.up.railway.app/usage/gas";
@@ -57,7 +57,7 @@ const GasForm = () => {
         <AiFillCloseSquare
           onClick={() => setIsGasFormOpen(false)}
           color="#1e90ff"
-          size={30}
+          size={26}
         />
       </div>
 
@@ -79,6 +79,9 @@ const GasForm = () => {
         />
         <button type="submit">Zapisz dane</button>
       </form>
+      <div className="deleteBtn">
+        <DeleteLastGasInput />
+      </div>
     </>
   );
 };

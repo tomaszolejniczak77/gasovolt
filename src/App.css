@@ -21,7 +21,6 @@
 }
 
 .header button {
-  /* color: #ffd700; */
   background-color: rgb(0, 0, 0, 0.5);
   cursor: pointer;
   border: none;
@@ -42,6 +41,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-height: 350px;
 }
 
 .div1 form {
@@ -54,7 +54,7 @@
 
 .div1 input {
   width: 220px;
-  height: 45px;
+  height: 40px;
   text-align: center;
   outline: none;
   border: none;
@@ -79,18 +79,29 @@
 }
 
 .div1 button {
-  height: 40px;
+  height: 25px;
   width: 120px;
   border: none;
   border-radius: 5px;
   background-color: #333;
-  color: #fff;
+  /* color: #fff; */
+  color: green;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   cursor: pointer;
 }
 
 .div1 button:hover {
   background-color: #555;
+}
+
+.deleteBtn {
+  display: flex;
+  justify-content: center;
+}
+
+.deleteBtn button {
+  color: red;
+  height: 25px;
 }
 
 .div1 p {
