@@ -51,7 +51,11 @@ const DeleteLastPowerInput = () => {
     });
   }
 
-  return <button onClick={handleDelete}>Usuń ostatni wpis</button>;
+  return (
+    <button className={styles.delete} onClick={handleDelete}>
+      Usuń ostatni wpis
+    </button>
+  );
 };
 
 export default DeleteLastPowerInput;

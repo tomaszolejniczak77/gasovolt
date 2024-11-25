@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
-import { AiFillCloseSquare } from "react-icons/ai";
 import DeleteLastGasInput from "./DeleteLastGasInput";
 // const URL = "http://192.168.1.225:8000/usage/gas";
 
@@ -53,13 +52,6 @@ const GasForm = () => {
   return (
     <>
       <h2>Wprowadź aktualne zużycie gazu</h2>
-      <div className="closeBtn">
-        <AiFillCloseSquare
-          onClick={() => setIsGasFormOpen(false)}
-          color="#1e90ff"
-          size={26}
-        />
-      </div>
 
       <form onSubmit={handleSumbit}>
         <input
@@ -79,8 +71,11 @@ const GasForm = () => {
         />
         <button type="submit">Zapisz dane</button>
       </form>
-      <div className="deleteBtn">
+      <div className="buttons">
         <DeleteLastGasInput />
+        <button id="close" onClick={() => setIsGasFormOpen(false)}>
+          Zamknij
+        </button>
       </div>
     </>
   );
