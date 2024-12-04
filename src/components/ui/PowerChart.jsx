@@ -1,7 +1,7 @@
-import React from "react";
 import { DateTime } from "luxon";
 import { useQuery } from "@tanstack/react-query";
-import { electricityQueryOptions } from "../../queries/electricityQueryOptions";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import {
   AreaChart,
   Area,
@@ -13,13 +13,27 @@ import {
 } from "recharts";
 
 const PowerChart = () => {
-  const { data, isPending } = useQuery(electricityQueryOptions);
+  const { userId, isLoggedIn } = useContext(AuthContext);
+
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["electricity", userId],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://gasovoltserver-production.up.railway.app/usage/electricity/${userId}`
+      );
+      return await response.json();
+    },
+  });
+
+  if (isError) {
+    return <p>Błąd pobierania</p>;
+  }
 
   if (isPending) {
     return <p>Ładowanie danych - prąd...</p>;
   }
 
-  const dailyUsage = data.slice(0, -1).map((item, index) => {
+  const dailyUsage = data?.slice(0, -1).map((item, index) => {
     const startD = DateTime.fromISO(item.date);
     const endD = DateTime.fromISO(data[index + 1].date);
     const diffInDays = endD.diff(startD, "days").days;
@@ -58,18 +72,37 @@ const PowerChart = () => {
     return null;
   }
 
-  const dataLen = data.length;
+  const dataLen = data?.length;
 
-  const startDate = DateTime.fromISO("2024-07-26");
-  const endDate = DateTime.fromISO(data[dataLen - 1].date);
+  const todayDate = DateTime.now();
+  // const yesterdayDate = DateTime.now().minus({ days: 1 });
+  const tomorrowDate = DateTime.now().plus({ days: 1 });
+
+  const startDate =
+    isLoggedIn && dataLen !== 0 ? DateTime.fromISO(data[0]?.date) : todayDate;
+
+  const endDate =
+    isLoggedIn && dataLen !== 0
+      ? DateTime.fromISO(data[dataLen - 1]?.date)
+      : tomorrowDate;
+
   const diffInDays = endDate.diff(startDate, "days").days;
-
   const daysFromDbBeginning = Math.floor(diffInDays);
-  const currentPowerUsageL1 = data[dataLen - 1].L1_usage;
-  const currentPowerUsageL2 = data[dataLen - 1].L2_usage;
 
-  const averagePowerusageL1 = currentPowerUsageL1 / daysFromDbBeginning;
-  const averagePowerusageL2 = currentPowerUsageL2 / daysFromDbBeginning;
+  const beginningPowerUsage1 = data[0]?.L1_usage;
+  const beginningPowerUsage2 = data[0]?.L2_usage;
+
+  const currentPowerUsageL1 = dataLen !== 0 ? data[dataLen - 1]?.L1_usage : 0;
+  const currentPowerUsageL2 = dataLen !== 0 ? data[dataLen - 1]?.L2_usage : 0;
+
+  const averagePowerusageL1 =
+    dataLen > 2
+      ? (currentPowerUsageL1 - beginningPowerUsage1) / daysFromDbBeginning
+      : 0;
+  const averagePowerusageL2 =
+    dataLen > 2
+      ? (currentPowerUsageL2 - beginningPowerUsage2) / daysFromDbBeginning
+      : 0;
 
   const totalAveragePowerUsage = (
     averagePowerusageL1 + averagePowerusageL2

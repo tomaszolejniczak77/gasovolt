@@ -1,13 +1,23 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { electricityQueryOptions } from "../../../queries/electricityQueryOptions";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
 
 const Electricity = () => {
+  const { userId } = useContext(AuthContext);
   const {
     data: electricity,
     isPending,
     isError,
-  } = useQuery(electricityQueryOptions);
+  } = useQuery({
+    queryKey: ["electricity", userId],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://gasovoltserver-production.up.railway.app/usage/electricity/${userId}`
+      );
+      return await response.json();
+    },
+  });
 
   if (isError) {
     return <p>Błąd pobierania</p>;
@@ -24,13 +34,13 @@ const Electricity = () => {
       <h2>Prąd</h2>
       <p>
         Aktualne zużycie dla L1 <br /> z dnia{" "}
-        {electricity[lastElectricityData].date} :{" "}
-        <span>{electricity[lastElectricityData].L1_usage} kWh</span>
+        {electricity[lastElectricityData]?.date} :{" "}
+        <span>{electricity[lastElectricityData]?.L1_usage} kWh</span>
       </p>
       <p>
         Aktualne zużycie dla L2 <br /> z dnia{" "}
-        {electricity[lastElectricityData].date} :{" "}
-        <span>{electricity[lastElectricityData].L2_usage} kWh</span>
+        {electricity[lastElectricityData]?.date} :{" "}
+        <span>{electricity[lastElectricityData]?.L2_usage} kWh</span>
       </p>
     </div>
   );

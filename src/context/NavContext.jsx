@@ -5,6 +5,7 @@ export const NavContext = createContext();
 export const NavProvider = ({ children }) => {
   const [isGasFormOpen, setIsGasFormOpen] = useState(false);
   const [isPowerFormOpen, setIsPowerFormOpen] = useState(false);
+  const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
 
   return (
     <NavContext.Provider
@@ -13,6 +14,8 @@ export const NavProvider = ({ children }) => {
         setIsGasFormOpen,
         isPowerFormOpen,
         setIsPowerFormOpen,
+        isLoginFormOpen,
+        setIsLoginFormOpen,
       }}
     >
       {children}

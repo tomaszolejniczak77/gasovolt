@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
+import { AuthContext } from "../../context/AuthContext";
 import DeleteLastGasInput from "./DeleteLastGasInput";
-// const URL = "http://192.168.1.225:8000/usage/gas";
-
-const URL_SERVER = "https://gasovoltserver-production.up.railway.app/usage/gas";
+const URL = "https://gasovoltserver-production.up.railway.app/usage/gas";
 
 const GasForm = () => {
   const [gasUsage, setGasUsage] = useState("");
@@ -13,10 +12,12 @@ const GasForm = () => {
 
   const { setIsGasFormOpen } = useContext(NavContext);
 
+  const { userId } = useContext(AuthContext);
+
   const queryClient = useQueryClient();
 
   const addGasUsage = async (usage) => {
-    const response = await fetch(URL_SERVER, {
+    const response = await fetch(URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +47,7 @@ const GasForm = () => {
 
   function handleSumbit(e) {
     e.preventDefault();
-    mutate({ date: gasInputDate, usage: +gasUsage });
+    mutate({ user_id: userId, date: gasInputDate, usage: +gasUsage });
   }
 
   return (

@@ -1,7 +1,8 @@
 import React from "react";
 import { DateTime } from "luxon";
 import { useQuery } from "@tanstack/react-query";
-import { gasQueryOptions } from "../../queries/gasQueryOpitions";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import {
   AreaChart,
   Area,
@@ -13,17 +14,34 @@ import {
 } from "recharts";
 
 const GasChart = () => {
-  const { data, isPending } = useQuery(gasQueryOptions);
+  const { userId } = useContext(AuthContext);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["gas", userId],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://gasovoltserver-production.up.railway.app/usage/gas/${userId}`
+      );
+      return await response.json();
+    },
+  });
+
+  if (isError) {
+    return <p>Błąd pobierania</p>;
+  }
 
   if (isPending) {
     return <p>Ładowanie danych - gaz...</p>;
   }
 
-  const dailyUsage = data.slice(0, -1).map((entry, index) => {
-    const difference = data[index + 1].usage - entry.usage;
+  const dailyUsage = data?.slice(0, -1).map((entry, index) => {
+    const difference = data[index + 1]?.usage - entry.usage;
+    const startD = DateTime.fromISO(entry.date);
+    const endD = DateTime.fromISO(data[index + 1]?.date);
+    const diffInDays = endD.diff(startD, "days")?.days;
+
     return {
-      dzień: entry.date,
-      zużycie: parseFloat(difference.toFixed(1)),
+      dzień: data[index + 1].date,
+      zużycie: parseFloat((difference / diffInDays).toFixed(2)),
       unit: "m³",
     };
   });
@@ -40,15 +58,23 @@ const GasChart = () => {
     return null;
   }
 
-  const dataLen = data.length;
+  const dataLen = data?.length;
 
-  const startDate = DateTime.fromISO("2024-10-03");
-  const endDate = DateTime.fromISO(data[dataLen - 1].date);
+  const todayDate = DateTime.now();
+  const tomorrowDate = DateTime.now().plus({ days: 1 });
+
+  const startDate = dataLen !== 0 ? DateTime.fromISO(data[0]?.date) : todayDate;
+  const endDate =
+    dataLen !== 0 ? DateTime.fromISO(data[dataLen - 1]?.date) : tomorrowDate;
   const diffInDays = endDate.diff(startDate, "days").days;
 
   const daysFromDbBeginning = Math.floor(diffInDays);
-  const currentGasUsage = data[dataLen - 1].usage;
-  const averageGasUsage = (currentGasUsage / daysFromDbBeginning).toFixed(2);
+  const beginningGasUsage = data[0]?.usage;
+  const currentGasUsage = data[dataLen - 1]?.usage;
+  const averageGasUsage =
+    dataLen > 2
+      ? ((currentGasUsage - beginningGasUsage) / daysFromDbBeginning).toFixed(2)
+      : 0;
 
   return (
     <>

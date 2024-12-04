@@ -5,14 +5,16 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import styles from "./DeleteLastInput.module.css";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const DeleteLastGasInput = () => {
   const queryClient = useQueryClient();
   const { setIsGasFormOpen } = useContext(NavContext);
+  const { userId } = useContext(AuthContext);
 
   const deleteItem = async () => {
     const response = await fetch(
-      `https://gasovoltserver-production.up.railway.app/delete_last/gas_usage`,
+      `https://gasovoltserver-production.up.railway.app/delete_last/gas_usage/${userId}`,
       {
         method: "DELETE",
       }

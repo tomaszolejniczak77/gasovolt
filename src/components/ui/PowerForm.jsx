@@ -2,11 +2,10 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
+import { AuthContext } from "../../context/AuthContext";
 import DeleteLastPowerInput from "./DeleteLastPowerInput";
 
-// const URL = "http://192.168.1.225:8000/usage/electricity";
-
-const URL_SERVER =
+const URL =
   "https://gasovoltserver-production.up.railway.app/usage/electricity";
 
 const PowerForm = () => {
@@ -15,11 +14,12 @@ const PowerForm = () => {
   const [powerInputDate, setPowerInputDate] = useState("");
 
   const { setIsPowerFormOpen } = useContext(NavContext);
+  const { userId } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
   const addPowerUsage = async (usage) => {
-    const response = await fetch(URL_SERVER, {
+    const response = await fetch(URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,6 +50,7 @@ const PowerForm = () => {
   function handleSumbit(e) {
     e.preventDefault();
     mutate({
+      user_id: userId,
       date: powerInputDate,
       L1_usage: +powerUsageL1,
       L2_usage: +powerUsageL2,
