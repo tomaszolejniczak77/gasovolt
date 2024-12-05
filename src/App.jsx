@@ -35,11 +35,11 @@ function App() {
               ) : isPowerFormOpen ? (
                 <PowerForm />
               ) : (
-                <GasChart />
+                <PowerChart />
               )}
             </div>
             <div className="div1">
-              <PowerChart />
+              <GasChart />
             </div>
           </div>
 
