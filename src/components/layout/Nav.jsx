@@ -21,8 +21,8 @@ const Nav = () => {
   const { isLoggedIn, setIsRegistered } = useContext(AuthContext);
 
   const icons = [
-    { name: "power", component: <ImPower size={30} color="#FF9933" /> },
     { name: "gas", component: <GiGasStove size={30} color="#1e90ff" /> },
+    { name: "power", component: <ImPower size={30} color="#FF9933" /> },
     {
       name: "login",
       component: (

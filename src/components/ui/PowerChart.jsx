@@ -119,12 +119,12 @@ const PowerChart = () => {
           >
             <defs>
               <linearGradient id="L1Fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#CC7A29" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#CC7A29" stopOpacity={0} />
+                <stop offset="5%" stopColor="#32CD32" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#32CD32" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="L2Fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#FF9933" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#FF9933" stopOpacity={0.2} />
+                <stop offset="5%" stopColor="#40E0D0" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#40E0D0" stopOpacity={0.2} />
               </linearGradient>
             </defs>
             <XAxis
@@ -140,14 +140,14 @@ const PowerChart = () => {
             <Area
               type="monotone"
               dataKey="L1"
-              stroke="#804000"
+              stroke="#228B22"
               fill="url(#L1Fill)"
               fillOpacity={1}
             />
             <Area
               type="monotone"
               dataKey="L2"
-              stroke="#CC6600"
+              stroke="#20B2AA"
               fillOpacity={1}
               fill="url(#L2Fill)"
             />
