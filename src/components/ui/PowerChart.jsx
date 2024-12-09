@@ -2,6 +2,8 @@ import { DateTime } from "luxon";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useUrls } from "../../context/UrlContext";
+
 import {
   AreaChart,
   Area,
@@ -13,17 +15,26 @@ import {
 } from "recharts";
 
 const PowerChart = () => {
-  const { userId, isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, accessToken } = useContext(AuthContext);
+
+  const { baseUrl, usageElectricityEndpoint } = useUrls();
 
   const { data, isPending, isError } = useQuery({
-    queryKey: ["electricity", userId],
+    queryKey: ["electricity", accessToken],
     queryFn: async () => {
-      const response = await fetch(
-        `https://gasovoltserver-production.up.railway.app/usage/electricity/${userId}`
-      );
+      const response = await fetch(`${baseUrl}/${usageElectricityEndpoint}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Dodaj token JWT do nagłówka
+        },
+      });
       return await response.json();
     },
+    enabled: !!accessToken,
   });
+
+  if (!accessToken) {
+    return <p>Musisz się zalogować, aby zobaczyć dane.</p>;
+  }
 
   if (isError) {
     return <p>Błąd pobierania</p>;
@@ -33,22 +44,24 @@ const PowerChart = () => {
     return <p>Ładowanie danych - prąd...</p>;
   }
 
-  const dailyUsage = data?.slice(0, -1).map((item, index) => {
+  const power = data.electricity_usage;
+
+  const dailyUsage = power?.slice(0, -1).map((item, index) => {
     const startD = DateTime.fromISO(item.date);
-    const endD = DateTime.fromISO(data[index + 1].date);
+    const endD = DateTime.fromISO(power[index + 1].date);
     const diffInDays = endD.diff(startD, "days").days;
 
     const startUsageL1 = item.L1_usage;
-    const endUsageL1 = data[index + 1].L1_usage;
+    const endUsageL1 = power[index + 1].L1_usage;
 
     const startUsageL2 = item.L2_usage;
-    const endUsageL2 = data[index + 1].L2_usage;
+    const endUsageL2 = power[index + 1].L2_usage;
 
     const diffInL1 = endUsageL1 - startUsageL1;
     const diffInL2 = endUsageL2 - startUsageL2;
 
     return {
-      dzień: data[index + 1].date,
+      dzień: power[index + 1].date,
       L1: +(diffInL1 / diffInDays).toFixed(2),
       L2: +(diffInL2 / diffInDays).toFixed(2),
       unit: "kWh",
@@ -72,28 +85,28 @@ const PowerChart = () => {
     return null;
   }
 
-  const dataLen = data?.length;
+  const dataLen = power?.length;
 
   const todayDate = DateTime.now();
   // const yesterdayDate = DateTime.now().minus({ days: 1 });
   const tomorrowDate = DateTime.now().plus({ days: 1 });
 
   const startDate =
-    isLoggedIn && dataLen !== 0 ? DateTime.fromISO(data[0]?.date) : todayDate;
+    isLoggedIn && dataLen !== 0 ? DateTime.fromISO(power[0]?.date) : todayDate;
 
   const endDate =
     isLoggedIn && dataLen !== 0
-      ? DateTime.fromISO(data[dataLen - 1]?.date)
+      ? DateTime.fromISO(power[dataLen - 1]?.date)
       : tomorrowDate;
 
   const diffInDays = endDate.diff(startDate, "days").days;
   const daysFromDbBeginning = Math.floor(diffInDays);
 
-  const beginningPowerUsage1 = data[0]?.L1_usage;
-  const beginningPowerUsage2 = data[0]?.L2_usage;
+  const beginningPowerUsage1 = power[0]?.L1_usage;
+  const beginningPowerUsage2 = power[0]?.L2_usage;
 
-  const currentPowerUsageL1 = dataLen !== 0 ? data[dataLen - 1]?.L1_usage : 0;
-  const currentPowerUsageL2 = dataLen !== 0 ? data[dataLen - 1]?.L2_usage : 0;
+  const currentPowerUsageL1 = dataLen !== 0 ? power[dataLen - 1]?.L1_usage : 0;
+  const currentPowerUsageL2 = dataLen !== 0 ? power[dataLen - 1]?.L2_usage : 0;
 
   const averagePowerusageL1 =
     dataLen > 2

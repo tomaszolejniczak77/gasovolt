@@ -6,19 +6,21 @@ import styles from "./DeleteLastInput.module.css";
 import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { AuthContext } from "../../context/AuthContext";
+import { useUrls } from "../../context/UrlContext";
 
 const DeleteLastGasInput = () => {
   const queryClient = useQueryClient();
   const { setIsGasFormOpen } = useContext(NavContext);
-  const { userId } = useContext(AuthContext);
+  const { accessToken } = useContext(AuthContext);
+  const { baseUrl, deleteLastGasEndpoint } = useUrls();
 
   const deleteItem = async () => {
-    const response = await fetch(
-      `https://gasovoltserver-production.up.railway.app/delete_last/gas_usage/${userId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`${baseUrl}/${deleteLastGasEndpoint}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     if (!response.ok) {
       throw new Error("Błąd podczas usuwania elementu");
     }
@@ -27,7 +29,6 @@ const DeleteLastGasInput = () => {
   const mutation = useMutation({
     mutationFn: () => deleteItem(),
     onSuccess: () => {
-      // Odśwież dane po usunięciu elementu
       queryClient.invalidateQueries(["gas"]);
       setIsGasFormOpen(false);
     },

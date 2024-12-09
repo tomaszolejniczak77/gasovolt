@@ -4,29 +4,31 @@ import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { AuthContext } from "../../context/AuthContext";
 import DeleteLastGasInput from "./DeleteLastGasInput";
-const URL = "https://gasovoltserver-production.up.railway.app/usage/gas";
+import { useUrls } from "../../context/UrlContext";
 
 const GasForm = () => {
   const [gasUsage, setGasUsage] = useState("");
   const [gasInputDate, setGasInputDate] = useState("");
+  const { baseUrl, usageGasEndpoint } = useUrls();
 
   const { setIsGasFormOpen } = useContext(NavContext);
 
-  const { userId } = useContext(AuthContext);
+  const { accessToken } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
   const addGasUsage = async (usage) => {
-    const response = await fetch(URL, {
+    const response = await fetch(`${baseUrl}/${usageGasEndpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Dodaj token JWT
       },
       body: JSON.stringify(usage),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to add user");
+      throw new Error("Failed to add new entry!");
     }
 
     return response.json();
@@ -47,7 +49,8 @@ const GasForm = () => {
 
   function handleSumbit(e) {
     e.preventDefault();
-    mutate({ user_id: userId, date: gasInputDate, usage: +gasUsage });
+    mutate({ date: gasInputDate, usage: +gasUsage });
+    // console.log(gasInputDate, +gasUsage);
   }
 
   return (

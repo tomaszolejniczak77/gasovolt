@@ -4,9 +4,7 @@ import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { AuthContext } from "../../context/AuthContext";
 import DeleteLastPowerInput from "./DeleteLastPowerInput";
-
-const URL =
-  "https://gasovoltserver-production.up.railway.app/usage/electricity";
+import { useUrls } from "../../context/UrlContext";
 
 const PowerForm = () => {
   const [powerUsageL1, setPowerUsageL1] = useState("");
@@ -14,15 +12,18 @@ const PowerForm = () => {
   const [powerInputDate, setPowerInputDate] = useState("");
 
   const { setIsPowerFormOpen } = useContext(NavContext);
-  const { userId } = useContext(AuthContext);
+  const { accessToken } = useContext(AuthContext);
+
+  const { baseUrl, usageElectricityEndpoint } = useUrls();
 
   const queryClient = useQueryClient();
 
   const addPowerUsage = async (usage) => {
-    const response = await fetch(URL, {
+    const response = await fetch(`${baseUrl}/${usageElectricityEndpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Dodaj token JWT
       },
       body: JSON.stringify(usage),
     });
@@ -50,7 +51,6 @@ const PowerForm = () => {
   function handleSumbit(e) {
     e.preventDefault();
     mutate({
-      user_id: userId,
       date: powerInputDate,
       L1_usage: +powerUsageL1,
       L2_usage: +powerUsageL2,

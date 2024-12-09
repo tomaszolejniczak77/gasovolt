@@ -1,23 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { useUrls } from "../../../context/UrlContext";
 
 const Gas = () => {
-  const { userId } = useContext(AuthContext);
+  const { accessToken } = useContext(AuthContext);
 
-  const {
-    data: gas,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["gas", userId],
+  const { baseUrl, usageGasEndpoint } = useUrls();
+
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["gas", accessToken],
     queryFn: async () => {
-      const response = await fetch(
-        `https://gasovoltserver-production.up.railway.app/usage/gas/${userId}`
-      );
+      const response = await fetch(`${baseUrl}/${usageGasEndpoint}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Dodaj token JWT do nagłówka
+        },
+      });
       return await response.json();
     },
+    enabled: !!accessToken,
   });
+
+  if (!accessToken) {
+    return <p>Musisz się zalogować, aby zobaczyć dane.</p>;
+  }
 
   if (isError) {
     return <p>Błąd pobierania</p>;
@@ -26,6 +32,8 @@ const Gas = () => {
   if (isPending) {
     return <p>Ładowanie danych - gaz...</p>;
   }
+
+  const gas = data.gas_usage;
 
   const lastGasData = gas.length - 1;
 

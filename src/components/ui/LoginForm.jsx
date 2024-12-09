@@ -4,22 +4,23 @@ import { NavContext } from "../../context/NavContext";
 import { AuthContext } from "../../context/AuthContext";
 import { useMutation } from "@tanstack/react-query";
 import { IoIosPersonAdd } from "react-icons/io";
+import { useUrls } from "../../context/UrlContext";
 
 const LoginForm = ({ login, setLogin, password, setPassword }) => {
-  const URL = "https://gasovoltserver-production.up.railway.app/login";
-
   const { setIsLoginFormOpen, isLoginFormOpen } = useContext(NavContext);
 
   const {
-    setUserId,
     isLoggedIn,
     setIsLoggedIn,
-    isRegistered,
     setIsRegistered,
+    setAccessToken,
+    setRefreshToken,
   } = useContext(AuthContext);
 
+  const { baseUrl } = useUrls();
+
   const loginUser = async (user) => {
-    const response = await fetch(URL, {
+    const response = await fetch(`${baseUrl}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,10 +40,11 @@ const LoginForm = ({ login, setLogin, password, setPassword }) => {
   const { mutate } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      localStorage.setItem("user_id", data.user_id);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("LoggedIn", true);
-      setUserId(data.user_id);
-      // alert("Logged in successfully!");
+      setAccessToken(data.access_token);
+      setRefreshToken(data.refresh_token);
       setIsLoggedIn(true);
     },
     onError: (error) => {
@@ -60,9 +62,11 @@ const LoginForm = ({ login, setLogin, password, setPassword }) => {
   function handleLogOut() {
     setIsLoginFormOpen(!setIsLoginFormOpen);
     setIsLoggedIn(false);
-    setUserId(0);
-    localStorage.removeItem("user_id");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     localStorage.removeItem("LoggedIn");
+    setAccessToken(null);
+    setRefreshToken(null);
   }
 
   return (

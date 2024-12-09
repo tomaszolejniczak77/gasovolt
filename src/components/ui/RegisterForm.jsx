@@ -1,15 +1,16 @@
 import React from "react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { useMutation } from "@tanstack/react-query";
+import { useUrls } from "../../context/UrlContext";
 
 const RegisterForm = ({ login, setLogin, password, setPassword }) => {
-  const URL = "https://gasovoltserver-production.up.railway.app/register";
-
   const { setIsLoginFormOpen, isLoginFormOpen } = useContext(NavContext);
 
+  const { baseUrl } = useUrls();
+
   const registerUser = async (user) => {
-    const response = await fetch(URL, {
+    const response = await fetch(`${baseUrl}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

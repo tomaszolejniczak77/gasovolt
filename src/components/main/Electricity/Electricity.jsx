@@ -2,22 +2,28 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { useUrls } from "../../../context/UrlContext";
 
 const Electricity = () => {
-  const { userId } = useContext(AuthContext);
-  const {
-    data: electricity,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["electricity", userId],
+  const { accessToken } = useContext(AuthContext);
+  const { baseUrl, usageElectricityEndpoint } = useUrls();
+
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["electricity", accessToken],
     queryFn: async () => {
-      const response = await fetch(
-        `https://gasovoltserver-production.up.railway.app/usage/electricity/${userId}`
-      );
+      const response = await fetch(`${baseUrl}/${usageElectricityEndpoint}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Dodaj token JWT do nagłówka
+        },
+      });
       return await response.json();
     },
+    enabled: !!accessToken,
   });
+
+  if (!accessToken) {
+    return <p>Musisz się zalogować, aby zobaczyć dane.</p>;
+  }
 
   if (isError) {
     return <p>Błąd pobierania</p>;
@@ -26,6 +32,8 @@ const Electricity = () => {
   if (isPending) {
     return <p>Ładowanie danych - prąd...</p>;
   }
+
+  const electricity = data.electricity_usage;
 
   const lastElectricityData = electricity.length - 1;
 
