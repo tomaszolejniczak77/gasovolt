@@ -15,13 +15,16 @@ export const AuthProvider = ({ children }) => {
 
   const refreshAccessToken = async () => {
     try {
-      const response = await fetch(`http://192.168.1.225:8000/refresh`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${refreshToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://gasovoltserver-production.up.railway.app/refresh`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${refreshToken}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
