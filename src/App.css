@@ -124,10 +124,12 @@
 .loginWrapper input::placeholder {
   color: #fff;
   opacity: 0.5;
+  text-align: center;
 }
 
 .loginWrapper input:focus::placeholder {
   color: transparent;
+  text-align: center;
 }
 
 .loginWrapper p {
@@ -331,6 +333,10 @@ h2 {
 }
 
 @media screen and (max-width: 520px) {
+  .container::before {
+    filter: brightness(0.6);
+  }
+
   .main1 > div {
     flex: 100%;
     min-height: 350px;
