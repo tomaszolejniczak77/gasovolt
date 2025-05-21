@@ -5,7 +5,7 @@ const UrlContext = createContext();
 export const UrlProvider = ({ children }) => {
   const urls = {
     // baseUrl: "https://gasovoltserver-production.up.railway.app",
-    baseUrl: "https://192.168.1.225:8000",
+    baseUrl: "http://192.168.1.225:8000",
     usageElectricityEndpoint: "usage/electricity",
     usageGasEndpoint: "usage/gas",
     deleteLastGasEndpoint: "delete_last/gas_usage",
