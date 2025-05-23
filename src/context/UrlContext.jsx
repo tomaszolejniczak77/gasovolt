@@ -6,7 +6,7 @@ export const UrlProvider = ({ children }) => {
   const urls = {
     // baseUrl: "https://gasovoltserver-production.up.railway.app",
     // baseUrl: "http://192.168.1.225:8000",
-    baseUrl: "https://active-garage-e-stake.trycloudflare.com",
+    baseUrl: "https://click-subjects-stainless-lower.trycloudflare.com",
     usageElectricityEndpoint: "usage/electricity",
     usageGasEndpoint: "usage/gas",
     deleteLastGasEndpoint: "delete_last/gas_usage",
